@@ -2,6 +2,7 @@ package com.mho.bakingapp.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,11 @@ public abstract class BaseRecyclerViewAdapter<T, VH extends BaseViewHolder<T>>
 
     //region Public Methods
 
-    public void setList(List<T> itemList){
+    public void setList(@Nullable List<T> itemList){
+        if(itemList == null){
+            itemList = new ArrayList<>();
+        }
+
         this.itemList = itemList;
         notifyDataSetChanged();
     }
