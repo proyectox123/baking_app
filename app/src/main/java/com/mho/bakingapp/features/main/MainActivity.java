@@ -14,7 +14,7 @@ import com.mho.bakingapp.R;
 import com.mho.bakingapp.adapters.recipe.RecipeListAdapter;
 import com.mho.bakingapp.adapters.recipe.RecipeViewHolder;
 import com.mho.bakingapp.databinding.ActivityMainBinding;
-import com.mho.bakingapp.features.BaseActivity;
+import com.mho.bakingapp.bases.BaseActivity;
 
 import java.util.List;
 

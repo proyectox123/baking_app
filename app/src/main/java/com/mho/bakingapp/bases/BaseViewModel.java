@@ -1,4 +1,4 @@
-package com.mho.bakingapp.features;
+package com.mho.bakingapp.bases;
 
 import android.arch.lifecycle.ViewModel;
 

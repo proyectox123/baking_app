@@ -1,4 +1,4 @@
-package com.mho.bakingapp.adapters;
+package com.mho.bakingapp.bases;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

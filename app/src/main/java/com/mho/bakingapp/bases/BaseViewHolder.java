@@ -1,4 +1,4 @@
-package com.mho.bakingapp.adapters;
+package com.mho.bakingapp.bases;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

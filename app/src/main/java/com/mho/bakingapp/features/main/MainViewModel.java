@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.mho.bakingapp.features.BaseViewModel;
+import com.mho.bakingapp.bases.BaseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

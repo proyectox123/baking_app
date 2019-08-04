@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mho.bakingapp.R;
-import com.mho.bakingapp.adapters.BaseViewHolder;
+import com.mho.bakingapp.bases.BaseViewHolder;
 
 public class RecipeViewHolder extends BaseViewHolder<String> {
 
