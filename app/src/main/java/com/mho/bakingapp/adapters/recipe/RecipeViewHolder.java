@@ -6,8 +6,9 @@ import android.widget.TextView;
 
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.bases.BaseViewHolder;
+import com.mho.bakingapp.data.remote.models.Recipe;
 
-public class RecipeViewHolder extends BaseViewHolder<String> {
+public class RecipeViewHolder extends BaseViewHolder<Recipe> {
 
     //region Constants
 
@@ -41,9 +42,9 @@ public class RecipeViewHolder extends BaseViewHolder<String> {
     //region Override Methods & Callbacks
 
     @Override
-    public void bind(final String item) {
-        itemRecipeTitle.setText(String.valueOf(getAdapterPosition()));
-        itemRecipeServings.setText(String.valueOf(getAdapterPosition()));
+    public void bind(final Recipe item) {
+        itemRecipeTitle.setText(item.getName());
+        itemRecipeServings.setText(String.valueOf(item.getServings()));
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +59,7 @@ public class RecipeViewHolder extends BaseViewHolder<String> {
     //region Inner Classes & Interfaces
 
     public interface OnRecipeViewHolderListener{
-        public void selectRecipe(String recipe);
+        void selectRecipe(Recipe recipe);
     }
 
     //endregion

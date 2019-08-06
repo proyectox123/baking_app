@@ -2,9 +2,13 @@ package com.mho.bakingapp.features.main;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.mho.bakingapp.bases.BaseViewModel;
+import com.mho.bakingapp.data.remote.models.Recipe;
+import com.mho.bakingapp.data.remote.requests.RecipeListRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +25,22 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
 
     //region Fields
 
-    private MutableLiveData<List<String>> recipeListData = new MutableLiveData<>();
+    private RecipeListRequest recipeListRequest;
+
+    //endregion
+
+    //region Constructors
+
+    public MainViewModel(){
+        recipeListRequest = new RecipeListRequest();
+    }
 
     //endregion
 
     //region Private Methods
 
-    MutableLiveData<List<String>> getRecipeListData() {
-        return recipeListData;
+    MutableLiveData<List<Recipe>> getRecipeListData() {
+        return recipeListRequest.getRecipeListData();
     }
 
     void validatePaneMode(boolean twoPaneMode){
@@ -40,7 +52,7 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
         }
     }
 
-    void validateInstanceState(Bundle savedInstanceState){
+    void validateInstanceState(@Nullable Bundle savedInstanceState){
         Log.d(TAG, "validateInstanceState");
         if (savedInstanceState == null) {
             Log.d(TAG, "validateInstanceState == null");
@@ -48,35 +60,38 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
             return;
         }
 
-        //recipeList = savedInstanceState.getParcelableArrayList(BUNDLE_MOVIE_TOP_RATED_LIST);
-        List<String> recipeList = savedInstanceState.getStringArrayList(BUNDLE_RECIPE_LIST);
+        List<Recipe> recipeList = savedInstanceState.getParcelableArrayList(BUNDLE_RECIPE_LIST);
         if(recipeList == null || recipeList.size() == 0){
             Log.d(TAG, "recipeList == null || size == 0");
             initRecipeList();
             return;
         }
 
-        recipeListData.setValue(recipeList);
+        getRecipeListData().setValue(recipeList);
     }
 
-    void saveInstanceState(Bundle outState) {
+    void saveInstanceState(@NonNull Bundle outState) {
         Log.d(TAG, "saveInstanceState");
 
-        List<String> recipeList = recipeListData.getValue();
+        List<Recipe> recipeList = getRecipeListData().getValue();
         if(recipeList != null && recipeList.size() > 0){
-            //outState.putParcelableArrayList(BUNDLE_RECIPE_LIST, new ArrayList<>(recipeList));
-            outState.putStringArrayList(BUNDLE_RECIPE_LIST, new ArrayList<>(recipeList));
+            outState.putParcelableArrayList(BUNDLE_RECIPE_LIST, new ArrayList<>(recipeList));
         }
+    }
+
+    void validateRecipeList(@Nullable List<Recipe> recipeList){
+        Log.d(TAG, "validateRecipeList recipeList: " + recipeList);
+        if(recipeList == null || recipeList.size() == 0){
+            getNavigator().showUpdateRecipeListError();
+            return;
+        }
+
+        getNavigator().updateRecipeList(recipeList);
     }
 
     private void initRecipeList(){
         Log.d(TAG, "initRecipeList");
-        List<String> recipeList = new ArrayList<>();
-        for(int i = 1; i<=30; i++){
-            recipeList.add("Recipe Nº " + i);
-        }
-
-        recipeListData.setValue(recipeList);
+        recipeListRequest.request();
     }
 
     //endregion

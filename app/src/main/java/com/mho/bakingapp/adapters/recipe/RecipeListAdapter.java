@@ -4,8 +4,9 @@ import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.mho.bakingapp.bases.BaseRecyclerViewAdapter;
+import com.mho.bakingapp.data.remote.models.Recipe;
 
-public class RecipeListAdapter extends BaseRecyclerViewAdapter<String, RecipeViewHolder> {
+public class RecipeListAdapter extends BaseRecyclerViewAdapter<Recipe, RecipeViewHolder> {
 
     //region Fields
 

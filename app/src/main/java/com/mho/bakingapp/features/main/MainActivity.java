@@ -3,6 +3,7 @@ package com.mho.bakingapp.features.main;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.adapters.recipe.RecipeListAdapter;
 import com.mho.bakingapp.adapters.recipe.RecipeViewHolder;
+import com.mho.bakingapp.data.remote.models.Recipe;
 import com.mho.bakingapp.databinding.ActivityMainBinding;
 import com.mho.bakingapp.bases.BaseActivity;
 
@@ -90,9 +92,19 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     }
 
     @Override
-    public void selectRecipe(String recipe) {
+    public void updateRecipeList(@NonNull List<Recipe> recipeList) {
+        recipeAdapter.setList(recipeList);
+    }
+
+    @Override
+    public void showUpdateRecipeListError() {
+
+    }
+
+    @Override
+    public void selectRecipe(Recipe recipe) {
         Log.d(TAG, "selectRecipe recipe: " + recipe);
-        Toast.makeText(MainActivity.this, "Recipe " + recipe, Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity.this, "Recipe " + recipe.toString(), Toast.LENGTH_LONG).show();
     }
 
     //endregion
@@ -101,18 +113,14 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
 
     private void initData(Bundle savedInstanceState){
         Log.d(TAG, "initData");
-        mainViewModel.getRecipeListData().observe(this, new Observer<List<String>>() {
+        mainViewModel.getRecipeListData().observe(this, new Observer<List<Recipe>>() {
             @Override
-            public void onChanged(@Nullable List<String> recipeList) {
-                updateRecipeList(recipeList);
+            public void onChanged(@Nullable List<Recipe> recipeList) {
+                mainViewModel.validateRecipeList(recipeList);
             }
         });
 
         mainViewModel.validateInstanceState(savedInstanceState);
-    }
-
-    private void updateRecipeList(List<String> recipeList) {
-        recipeAdapter.setList(recipeList);
     }
 
     //endregion
