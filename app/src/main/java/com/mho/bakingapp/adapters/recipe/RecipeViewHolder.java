@@ -20,6 +20,7 @@ public class RecipeViewHolder extends BaseViewHolder<Recipe> {
 
     private TextView itemRecipeTitle;
     private TextView itemRecipeServings;
+    private TextView itemRecipeIngredients;
 
     private OnRecipeViewHolderListener onRecipeViewHolderListener;
 
@@ -33,6 +34,7 @@ public class RecipeViewHolder extends BaseViewHolder<Recipe> {
 
         this.itemRecipeTitle = itemView.findViewById(R.id.itemRecipeTitle);
         this.itemRecipeServings = itemView.findViewById(R.id.itemRecipeServings);
+        this.itemRecipeIngredients = itemView.findViewById(R.id.itemRecipeIngredients);
 
         this.onRecipeViewHolderListener = onRecipeViewHolderListener;
     }
@@ -43,8 +45,12 @@ public class RecipeViewHolder extends BaseViewHolder<Recipe> {
 
     @Override
     public void bind(final Recipe item) {
+        String recipeServingsLabel = context.getString(R.string.item_recipe_servings, item.getServings());
+        String recipeIngredientsLabel = context.getString(R.string.item_recipe_ingredients, item.getIngredientsCount());
+
         itemRecipeTitle.setText(item.getName());
-        itemRecipeServings.setText(String.valueOf(item.getServings()));
+        itemRecipeServings.setText(recipeServingsLabel);
+        itemRecipeIngredients.setText(recipeIngredientsLabel);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

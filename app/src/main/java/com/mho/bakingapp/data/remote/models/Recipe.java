@@ -63,6 +63,10 @@ public class Recipe implements Parcelable {
         this.image = image;
     }
 
+    public int getIngredientsCount(){
+        return this.ingredients == null ? 0 : this.ingredients.size();
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Baking App</string>
+    <string name="app_name" translatable="false">Baking App</string>
 
     <string name="error_load_data">An error has occurred. Try again later.</string>
+
+    <string name="item_recipe_servings">Servings: %1$d</string>
+    <string name="item_recipe_ingredients">Ingredients: %1$d</string>
 </resources>
