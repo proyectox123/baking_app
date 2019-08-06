@@ -97,11 +97,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     }
 
     @Override
-    public void showUpdateRecipeListError() {
-
-    }
-
-    @Override
     public void selectRecipe(Recipe recipe) {
         Log.d(TAG, "selectRecipe recipe: " + recipe);
         Toast.makeText(MainActivity.this, "Recipe " + recipe.toString(), Toast.LENGTH_LONG).show();

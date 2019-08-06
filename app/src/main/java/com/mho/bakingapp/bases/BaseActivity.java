@@ -9,8 +9,6 @@ public abstract class BaseActivity<D extends ViewDataBinding, VM extends BaseVie
 
     public D binding;
 
-    private VM viewModel;
-
     public abstract int getIdLayout();
 
     public abstract int getBindingVariable();
@@ -23,7 +21,8 @@ public abstract class BaseActivity<D extends ViewDataBinding, VM extends BaseVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.binding = DataBindingUtil.setContentView(this, getIdLayout());
-        this.viewModel = getViewModel();
+        this.binding.setLifecycleOwner(this);
+        VM viewModel = getViewModel();
         binding.setVariable(getBindingVariable(), viewModel);
         binding.executePendingBindings();
         setNavigator();

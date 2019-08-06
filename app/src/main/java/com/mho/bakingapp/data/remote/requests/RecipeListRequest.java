@@ -26,13 +26,9 @@ public class RecipeListRequest {
     }
 
     public void request(){
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://d17h27t6h515a5.cloudfront.net/")
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();
 
         RecipeDao recipeDao = retrofit.create(RecipeDao.class);
@@ -43,12 +39,7 @@ public class RecipeListRequest {
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 switch (response.code()) {
                     case 200:
-                        List<Recipe> data = response.body();
-                        //view.notifyDataSetChanged(data.getResults());
-                        recipeListData.setValue(data);
-                        break;
-                    case 401:
-                        recipeListData.setValue(null);
+                        recipeListData.setValue(response.body());
                         break;
                     default:
                         recipeListData.setValue(null);
@@ -58,10 +49,14 @@ public class RecipeListRequest {
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                Log.e("error", t.toString());
                 recipeListData.setValue(null);
             }
         });
     }
 
+    private Gson getGson(){
+        return new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+    }
 }

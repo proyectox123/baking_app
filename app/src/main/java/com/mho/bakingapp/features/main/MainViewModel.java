@@ -2,6 +2,7 @@ package com.mho.bakingapp.features.main;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -25,6 +26,10 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
 
     //region Fields
 
+    public final MutableLiveData<Boolean> hasLoadError = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> hasInformation = new MutableLiveData<>();
+    public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+
     private RecipeListRequest recipeListRequest;
 
     //endregion
@@ -32,7 +37,7 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
     //region Constructors
 
     public MainViewModel(){
-        recipeListRequest = new RecipeListRequest();
+        this.recipeListRequest = new RecipeListRequest();
     }
 
     //endregion
@@ -54,6 +59,10 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
 
     void validateInstanceState(@Nullable Bundle savedInstanceState){
         Log.d(TAG, "validateInstanceState");
+        hasInformation.setValue(false);
+        hasLoadError.setValue(false);
+        isLoading.setValue(false);
+
         if (savedInstanceState == null) {
             Log.d(TAG, "validateInstanceState == null");
             initRecipeList();
@@ -81,17 +90,27 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
 
     void validateRecipeList(@Nullable List<Recipe> recipeList){
         Log.d(TAG, "validateRecipeList recipeList: " + recipeList);
+        isLoading.setValue(false);
         if(recipeList == null || recipeList.size() == 0){
-            getNavigator().showUpdateRecipeListError();
+            hasInformation.setValue(false);
+            hasLoadError.setValue(true);
             return;
         }
 
+        hasInformation.setValue(true);
+        hasLoadError.setValue(false);
         getNavigator().updateRecipeList(recipeList);
     }
 
     private void initRecipeList(){
         Log.d(TAG, "initRecipeList");
-        recipeListRequest.request();
+        isLoading.setValue(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recipeListRequest.request();
+            }
+        }, 1500);
     }
 
     //endregion
