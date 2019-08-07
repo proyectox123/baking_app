@@ -2,6 +2,7 @@ package com.mho.bakingapp.features.main;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;
@@ -18,9 +18,11 @@ import com.mho.bakingapp.adapters.recipe.RecipeViewHolder;
 import com.mho.bakingapp.data.remote.models.Recipe;
 import com.mho.bakingapp.databinding.ActivityMainBinding;
 import com.mho.bakingapp.bases.BaseActivity;
+import com.mho.bakingapp.features.recipedetail.RecipeDetailActivity;
 
 import java.util.List;
 
+import static com.mho.bakingapp.utils.Constants.EXTRA_RECIPE;
 import static com.mho.bakingapp.utils.Constants.RECIPE_GRID_COLUMNS;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel>
@@ -113,7 +115,9 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     @Override
     public void selectRecipe(Recipe recipe) {
         Log.d(TAG, "selectRecipe recipe: " + recipe);
-        Toast.makeText(MainActivity.this, "Recipe " + recipe.toString(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(EXTRA_RECIPE, recipe);
+        startActivity(intent);
     }
 
     //endregion

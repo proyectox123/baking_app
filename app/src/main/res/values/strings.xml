@@ -5,4 +5,6 @@
 
     <string name="item_recipe_servings">Servings: %1$d</string>
     <string name="item_recipe_ingredients">Ingredients: %1$d</string>
+    <string name="title_activity_recipe_detail">RecipeDetail</string>
+    <string name="action_settings">Settings</string>
 </resources>
