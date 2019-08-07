@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -51,6 +52,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         recipeAdapter = new RecipeListAdapter(this);
         binding.recipeRecyclerView.setAdapter(recipeAdapter);
 
+        binding.recipeListSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mainViewModel.retryInitRecipeList();
+            }
+        });
+
         initData(savedInstanceState);
     }
 
@@ -93,7 +101,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
 
     @Override
     public void updateRecipeList(@NonNull List<Recipe> recipeList) {
+        binding.recipeListSwipeRefresh.setRefreshing(false);
         recipeAdapter.setList(recipeList);
+    }
+
+    @Override
+    public void showLoadingRecipeListError(){
+        binding.recipeListSwipeRefresh.setRefreshing(false);
     }
 
     @Override

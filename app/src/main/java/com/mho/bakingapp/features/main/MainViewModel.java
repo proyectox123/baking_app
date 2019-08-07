@@ -94,12 +94,22 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
         if(recipeList == null || recipeList.size() == 0){
             hasInformation.setValue(false);
             hasLoadError.setValue(true);
+            getNavigator().showLoadingRecipeListError();
             return;
         }
 
         hasInformation.setValue(true);
         hasLoadError.setValue(false);
         getNavigator().updateRecipeList(recipeList);
+    }
+
+    void retryInitRecipeList(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recipeListRequest.request();
+            }
+        }, 1000);
     }
 
     private void initRecipeList(){
@@ -110,7 +120,7 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
             public void run() {
                 recipeListRequest.request();
             }
-        }, 1500);
+        }, 1000);
     }
 
     //endregion
