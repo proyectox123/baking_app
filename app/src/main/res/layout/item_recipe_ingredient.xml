@@ -8,6 +8,7 @@
 
     <TextView
         style="@style/ItemRecipeIngredientDetailStyle"
+        android:id="@+id/itemIngredientDetail"
         tools:text="* Ingredient 1"/>
 
 </LinearLayout>
