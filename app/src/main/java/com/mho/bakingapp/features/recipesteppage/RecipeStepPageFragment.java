@@ -1,11 +1,15 @@
 package com.mho.bakingapp.features.recipesteppage;
 
-import androidx.lifecycle.ViewModelProviders;
+import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.bases.BaseFragment;
@@ -20,7 +24,7 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
 
     //endregion
 
-    //region Private Methods
+    //region Fields
 
     private RecipeStepPageViewModel recipeStepPageViewModel;
 
@@ -38,8 +42,52 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
 
-        recipeStepPageViewModel.initRecipeStep();
+    @Override
+    public void onResume() {
+        super.onResume();
+        recipeStepPageViewModel.initRecipeStep(getContext());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        recipeStepPageViewModel.releasePlayer();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            hideSystemUiFullScreen();
+        } else {
+            hideSystemUi();
+        }
+    }
+
+    @SuppressLint("InlinedApi")
+    private void hideSystemUiFullScreen() {
+        binding.videoRecipeStep.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LOW_PROFILE |
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        );
+    }
+
+    @SuppressLint("InlinedApi")
+    private void hideSystemUi() {
+        binding.videoRecipeStep.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LOW_PROFILE |
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        );
     }
 
     @Override
@@ -63,11 +111,22 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
         recipeStepPageViewModel.setNavigator(this);
     }
 
+    @Override
+    public void hidePlayer() {
+        binding.videoRecipeStep.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setPlayer(SimpleExoPlayer player) {
+        binding.videoRecipeStep.setVisibility(View.VISIBLE);
+        binding.videoRecipeStep.setPlayer(player);
+    }
+
     //endregion
 
-    //region Public Methods
+    //region Private Methods
 
-    public static RecipeStepPageFragment newInstance(Bundle bundle){
+    static RecipeStepPageFragment newInstance(Bundle bundle){
         RecipeStepPageFragment fragment = new RecipeStepPageFragment();
         fragment.setArguments(bundle);
         return fragment;

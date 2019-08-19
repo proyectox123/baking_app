@@ -1,20 +1,47 @@
 package com.mho.bakingapp.features.recipesteppage;
 
-import androidx.lifecycle.MutableLiveData;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.lifecycle.MutableLiveData;
+
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.mho.bakingapp.bases.BaseViewModel;
 import com.mho.bakingapp.data.remote.models.Step;
+import com.mho.bakingapp.features.recipestepvideo.RecipeStepVideo;
 
 import static com.mho.bakingapp.utils.Constants.EXTRA_STEP;
 
-public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigator> {
+public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigator> implements
+        RecipeStepVideo.OnRecipeStepVideoListener {
 
     //region Fields
 
     public final MutableLiveData<String> recipeStepDescription = new MutableLiveData<>();
 
     private Step step;
+
+    private RecipeStepVideo recipeStepVideo;
+
+    //endregion
+
+    //region Constructors
+
+    public RecipeStepPageViewModel(){
+        super();
+
+        this.recipeStepVideo = new RecipeStepVideo(this);
+    }
+
+    //endregion
+
+    //region Override Methods & Callbacks
+
+    @Override
+    public void setPlayer(SimpleExoPlayer player) {
+        getNavigator().setPlayer(player);
+    }
 
     //endregion
 
@@ -32,8 +59,23 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
         step = arguments.getParcelable(EXTRA_STEP);
     }
 
-    void initRecipeStep() {
+    void initRecipeStep(Context context) {
         recipeStepDescription.setValue(step.getDescription());
+        validateRecipeStepVideo(context, step);
+    }
+
+    void releasePlayer(){
+        recipeStepVideo.releasePlayer();
+    }
+
+    private void validateRecipeStepVideo(Context context, Step step){
+        if (step.getVideoURL() == null || step.getVideoURL().trim().isEmpty()) {
+            getNavigator().hidePlayer();
+            return;
+        }
+
+        recipeStepVideo.initializePlayer(context);
+        recipeStepVideo.buildMediaSource(context, Uri.parse(step.getVideoURL()));
     }
 
     //endregion
