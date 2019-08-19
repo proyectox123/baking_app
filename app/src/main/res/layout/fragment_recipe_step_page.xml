@@ -8,7 +8,7 @@
             type="com.mho.bakingapp.features.recipesteppage.RecipeStepPageViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".features.recipesteppage.RecipeStepPageFragment">
@@ -22,5 +22,5 @@
             tools:text="@tools:sample/lorem/random"
             tools:maxLines="3"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

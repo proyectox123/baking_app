@@ -1,6 +1,6 @@
 package com.mho.bakingapp.adapters.recipe;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.mho.bakingapp.bases.BaseRecyclerViewAdapter;

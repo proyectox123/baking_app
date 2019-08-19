@@ -1,7 +1,6 @@
 package com.mho.bakingapp.data.remote.requests;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

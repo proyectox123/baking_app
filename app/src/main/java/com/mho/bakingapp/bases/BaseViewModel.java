@@ -1,6 +1,6 @@
 package com.mho.bakingapp.bases;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 import java.lang.ref.WeakReference;
 
