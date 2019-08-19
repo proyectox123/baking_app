@@ -14,6 +14,8 @@ public abstract class BaseFragment<D extends ViewDataBinding, VM extends BaseVie
 
     public D binding;
 
+    private VM viewModel;
+
     public abstract int getIdLayout();
 
     public abstract int getBindingVariable();
@@ -22,15 +24,22 @@ public abstract class BaseFragment<D extends ViewDataBinding, VM extends BaseVie
 
     public abstract void setNavigator();
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.viewModel = getViewModel();
+
+        setNavigator();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.binding = DataBindingUtil.inflate(inflater, getIdLayout(), container, false);
         this.binding.setLifecycleOwner(this);
-        VM viewModel = getViewModel();
         this.binding.setVariable(getBindingVariable(), viewModel);
         this.binding.executePendingBindings();
-        setNavigator();
         return this.binding.getRoot();
     }
 }

@@ -1,27 +1,38 @@
 package com.mho.bakingapp.features.recipedetail;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.adapters.ingredient.IngredientListAdapter;
-import com.mho.bakingapp.adapters.recipe.RecipeListAdapter;
 import com.mho.bakingapp.adapters.step.StepListAdapter;
+import com.mho.bakingapp.adapters.step.StepViewHolder;
 import com.mho.bakingapp.bases.BaseFragment;
-import com.mho.bakingapp.data.remote.models.Recipe;
+import com.mho.bakingapp.data.remote.models.Ingredient;
+import com.mho.bakingapp.data.remote.models.Step;
 import com.mho.bakingapp.databinding.FragmentRecipeDetailBinding;
 
-import static com.mho.bakingapp.utils.Constants.EXTRA_RECIPE;
+import java.util.List;
 
 public class RecipeDetailFragment extends BaseFragment<FragmentRecipeDetailBinding, RecipeDetailViewModel>
-        implements RecipeDetailNavigator{
+        implements RecipeDetailNavigator, StepViewHolder.OnStepViewHolderListener{
+
+    //region Fields
+
+    private IngredientListAdapter ingredientAdapter;
+    private StepListAdapter stepListAdapter;
+
+    private RecipeDetailViewModel recipeDetailViewModel;
+
+    private OnRecipeDetailFragmentListener onRecipeDetailFragmentListener;
+
+    //endregion
 
     //region Constructor
 
@@ -29,46 +40,40 @@ public class RecipeDetailFragment extends BaseFragment<FragmentRecipeDetailBindi
 
     //endregion
 
-    //region Fields
-
-    private Recipe recipe;
-
-    private RecipeDetailViewModel recipeDetailViewModel;
-
-    //endregion
-
     //region Override Methods & Callbacks
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            onRecipeDetailFragmentListener = (OnRecipeDetailFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnRecipeDetailFragmentListener");
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments() != null){
-            if(getArguments().containsKey(EXTRA_RECIPE)){
-                recipe = getArguments().getParcelable(EXTRA_RECIPE);
-            }
-        }
+        recipeDetailViewModel.validateRecipeDetailArguments(getArguments());
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        IngredientListAdapter ingredientAdapter = new IngredientListAdapter();
+        ingredientAdapter = new IngredientListAdapter();
         binding.recipeIngredientsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recipeIngredientsRecyclerView.setAdapter(ingredientAdapter);
 
-        StepListAdapter stepAdapter = new StepListAdapter();
-        DividerItemDecoration dividerDecoration = new DividerItemDecoration(binding.recipeStepsRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        stepListAdapter = new StepListAdapter(this);
         binding.recipeStepsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recipeStepsRecyclerView.setAdapter(stepAdapter);
-        binding.recipeStepsRecyclerView.addItemDecoration(dividerDecoration);
+        binding.recipeStepsRecyclerView.setAdapter(stepListAdapter);
 
-        if(recipe != null){
-            ingredientAdapter.setList(recipe.getIngredients());
-            stepAdapter.setList(recipe.getSteps());
-        }
+        recipeDetailViewModel.initRecipeIngredientList();
+        recipeDetailViewModel.initRecipeStepList();
     }
 
     @Override
@@ -92,6 +97,26 @@ public class RecipeDetailFragment extends BaseFragment<FragmentRecipeDetailBindi
         recipeDetailViewModel.setNavigator(this);
     }
 
+    @Override
+    public void finishActivity() {
+        onRecipeDetailFragmentListener.finishActivity();
+    }
+
+    @Override
+    public void updateIngredientList(List<Ingredient> ingredients) {
+        ingredientAdapter.setList(ingredients);
+    }
+
+    @Override
+    public void updateStepList(List<Step> steps) {
+        stepListAdapter.setList(steps);
+    }
+
+    @Override
+    public void selectStep(Step step) {
+        onRecipeDetailFragmentListener.startRecipeStep(step);
+    }
+
     //endregion
 
     //region Public Methods
@@ -100,6 +125,15 @@ public class RecipeDetailFragment extends BaseFragment<FragmentRecipeDetailBindi
         RecipeDetailFragment fragment = new RecipeDetailFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    //endregion
+
+    //region Inner Classes & Callbacks
+
+    public interface OnRecipeDetailFragmentListener {
+        void finishActivity();
+        void startRecipeStep(Step step);
     }
 
     //endregion
