@@ -5,10 +5,17 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.data.remote.models.Step;
 import com.mho.bakingapp.features.recipestep.RecipeStepActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mho.bakingapp.utils.Constants.EXTRA_STEP_ID;
+import static com.mho.bakingapp.utils.Constants.EXTRA_STEP_LIST;
 
 public class RecipeDetailActivity extends AppCompatActivity implements
         RecipeDetailFragment.OnRecipeDetailFragmentListener {
@@ -32,13 +39,25 @@ public class RecipeDetailActivity extends AppCompatActivity implements
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void finishActivity() {
         finish();
     }
 
     @Override
-    public void startRecipeStep(Step step) {
+    public void startRecipeStep(int stepId, List<Step> stepList) {
         Intent intent = new Intent(this, RecipeStepActivity.class);
+        intent.putExtra(EXTRA_STEP_ID, stepId);
+        intent.putParcelableArrayListExtra(EXTRA_STEP_LIST, (ArrayList<Step>) stepList);
         startActivity(intent);
     }
 

@@ -9,4 +9,5 @@ public interface RecipeDetailNavigator {
     void finishActivity();
     void updateIngredientList(List<Ingredient> ingredients);
     void updateStepList(List<Step> steps);
+    void startRecipeStep(int stepId, List<Step> steps);
 }

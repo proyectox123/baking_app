@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.mho.bakingapp.R;
 
-public class RecipeStepActivity extends AppCompatActivity {
+public class RecipeStepActivity extends AppCompatActivity implements
+        RecipeStepFragment.OnRecipeStepFragmentListener {
+
+    //region Override Methods & Callbacks
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,4 +28,21 @@ public class RecipeStepActivity extends AppCompatActivity {
             transaction.commit();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finishActivity() {
+        finish();
+    }
+
+    //endregion
 }

@@ -42,7 +42,6 @@ public class RecipeDetailFragment extends BaseFragment<FragmentRecipeDetailBindi
 
     //region Override Methods & Callbacks
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -114,7 +113,12 @@ public class RecipeDetailFragment extends BaseFragment<FragmentRecipeDetailBindi
 
     @Override
     public void selectStep(Step step) {
-        onRecipeDetailFragmentListener.startRecipeStep(step);
+        recipeDetailViewModel.validateSelectedStep(step);
+    }
+
+    @Override
+    public void startRecipeStep(int stepId, List<Step> steps) {
+        onRecipeDetailFragmentListener.startRecipeStep(stepId, steps);
     }
 
     //endregion
@@ -133,7 +137,7 @@ public class RecipeDetailFragment extends BaseFragment<FragmentRecipeDetailBindi
 
     public interface OnRecipeDetailFragmentListener {
         void finishActivity();
-        void startRecipeStep(Step step);
+        void startRecipeStep(int stepId, List<Step> stepList);
     }
 
     //endregion
