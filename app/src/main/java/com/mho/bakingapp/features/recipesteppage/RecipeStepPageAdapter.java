@@ -49,7 +49,7 @@ public class RecipeStepPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return stepList.size();
+        return stepList == null ? 0 : stepList.size();
     }
 
     @Override

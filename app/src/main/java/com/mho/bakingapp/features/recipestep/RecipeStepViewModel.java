@@ -27,7 +27,7 @@ public class RecipeStepViewModel extends BaseViewModel<RecipeStepNavigator> {
             return;
         }
 
-        if(!arguments.containsKey(EXTRA_STEP_ID) || !arguments.containsKey(EXTRA_STEP_ID)){
+        if(!arguments.containsKey(EXTRA_STEP_ID) || !arguments.containsKey(EXTRA_STEP_LIST)){
             getNavigator().finishActivity();
             return;
         }

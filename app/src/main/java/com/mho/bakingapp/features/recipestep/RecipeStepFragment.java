@@ -129,7 +129,7 @@ public class RecipeStepFragment extends BaseFragment<FragmentRecipeStepBinding, 
 
     //region Public Methods
 
-    static RecipeStepFragment newInstance(Bundle bundle){
+    public static RecipeStepFragment newInstance(Bundle bundle){
         RecipeStepFragment fragment = new RecipeStepFragment();
         fragment.setArguments(bundle);
         return fragment;
