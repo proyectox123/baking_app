@@ -1,12 +1,13 @@
 package com.mho.bakingapp.features.recipedetail;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import android.view.View;
 
 import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;

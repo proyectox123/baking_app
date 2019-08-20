@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
+        <!-- Activities -->
         <activity android:name=".features.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,11 +25,27 @@
         <activity
             android:name=".features.recipedetail.RecipeDetailActivity"
             android:label="@string/title_activity_recipe_detail"
-            android:parentActivityName=".features.main.MainActivity"/>
+            android:parentActivityName=".features.main.MainActivity" />
         <activity
             android:name=".features.recipestep.RecipeStepActivity"
             android:label="@string/title_activity_recipe_steps"
-            android:parentActivityName=".features.recipedetail.RecipeDetailActivity"/>
+            android:parentActivityName=".features.recipedetail.RecipeDetailActivity" />
+
+        <!-- Receivers -->
+        <receiver android:name=".widgets.RecipeListWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_list_widget_info" />
+        </receiver>
+
+        <!-- Services -->
+        <service
+            android:name=".widgets.AppWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

@@ -1,24 +1,26 @@
 package com.mho.bakingapp.features.main;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import android.util.Log;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.adapters.recipe.RecipeListAdapter;
 import com.mho.bakingapp.adapters.recipe.RecipeViewHolder;
+import com.mho.bakingapp.bases.BaseActivity;
 import com.mho.bakingapp.data.remote.models.Recipe;
 import com.mho.bakingapp.databinding.ActivityMainBinding;
-import com.mho.bakingapp.bases.BaseActivity;
 import com.mho.bakingapp.features.recipedetail.RecipeDetailActivity;
+import com.mho.bakingapp.widgets.AppWidgetService;
 
 import java.util.List;
 
@@ -115,6 +117,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     @Override
     public void selectRecipe(Recipe recipe) {
         Log.d(TAG, "selectRecipe recipe: " + recipe);
+        AppWidgetService.updateWidget(this, recipe);
+
         Intent intent = new Intent(this, RecipeDetailActivity.class);
         intent.putExtra(EXTRA_RECIPE, recipe);
         startActivity(intent);
