@@ -1,8 +1,9 @@
 package com.mho.bakingapp.adapters.step;
 
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.bases.BaseViewHolder;
@@ -40,7 +41,7 @@ public class StepViewHolder extends BaseViewHolder<Step> {
 
     @Override
     public void bind(final Step item) {
-        String ingredientLabel = item.getId() + ". " + item.getShortDescription();
+        String ingredientLabel = (item.getId() + 1) + ". " + item.getShortDescription();
 
         itemStepDetail.setText(ingredientLabel);
 

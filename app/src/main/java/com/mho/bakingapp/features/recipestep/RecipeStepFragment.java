@@ -1,12 +1,14 @@
 package com.mho.bakingapp.features.recipestep;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
-import android.view.View;
 
 import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;
@@ -21,6 +23,8 @@ public class RecipeStepFragment extends BaseFragment<FragmentRecipeStepBinding, 
         implements RecipeStepNavigator{
 
     //region Fields
+
+    private boolean isTwoPane;
 
     private RecipeStepPageAdapter recipeStepPageAdapter;
 
@@ -53,6 +57,8 @@ public class RecipeStepFragment extends BaseFragment<FragmentRecipeStepBinding, 
         super.onCreate(savedInstanceState);
 
         recipeStepViewModel.validateRecipeStepArguments(getArguments());
+
+        isTwoPane = getResources().getBoolean(R.bool.two_pane_mode);
     }
 
     @Override
@@ -77,6 +83,12 @@ public class RecipeStepFragment extends BaseFragment<FragmentRecipeStepBinding, 
         binding.tabRecipeSteps.setupWithViewPager(binding.viewPagerRecipeStepPages);
 
         recipeStepViewModel.initStepTabs();
+
+        int orientation = getResources().getConfiguration().orientation;
+
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && !isTwoPane) {
+            binding.tabRecipeSteps.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -106,15 +118,18 @@ public class RecipeStepFragment extends BaseFragment<FragmentRecipeStepBinding, 
     }
 
     @Override
-    public void updateStepTabs(List<Step> stepList) {
+    public void updateStepTabs(int currentPosition, List<Step> stepList) {
         recipeStepPageAdapter.updateStepList(stepList);
+
+        binding.tabRecipeSteps.setScrollPosition(currentPosition,0f,true);
+        binding.viewPagerRecipeStepPages.setCurrentItem(currentPosition);
     }
 
     //endregion
 
     //region Public Methods
 
-    public static RecipeStepFragment newInstance(Bundle bundle){
+    static RecipeStepFragment newInstance(Bundle bundle){
         RecipeStepFragment fragment = new RecipeStepFragment();
         fragment.setArguments(bundle);
         return fragment;

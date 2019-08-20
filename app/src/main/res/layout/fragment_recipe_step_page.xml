@@ -16,6 +16,7 @@
         android:keepScreenOn="true">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardRecipeStepDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

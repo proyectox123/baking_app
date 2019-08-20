@@ -22,14 +22,6 @@ public class RecipeStepViewModel extends BaseViewModel<RecipeStepNavigator> {
     //Private Methods
 
     void validateRecipeStepArguments(Bundle arguments) {
-        /*
-        if (savedInstanceState == null) {
-      stepId = getArguments().getInt(RecipeStepActivity.EXTRA_STEP_ID);
-    } else {
-      stepId = savedInstanceState.getInt(RecipeStepActivity.EXTRA_STEP_ID);
-    }
-         */
-
         if (arguments == null) {
             getNavigator().finishActivity();
             return;
@@ -45,7 +37,7 @@ public class RecipeStepViewModel extends BaseViewModel<RecipeStepNavigator> {
     }
 
     void initStepTabs() {
-        getNavigator().updateStepTabs(stepList);
+        getNavigator().updateStepTabs(stepId, stepList);
     }
 
     //endregion

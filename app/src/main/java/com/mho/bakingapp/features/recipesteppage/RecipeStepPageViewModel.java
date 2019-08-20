@@ -1,12 +1,14 @@
 package com.mho.bakingapp.features.recipesteppage;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.mho.bakingapp.R;
 import com.mho.bakingapp.bases.BaseViewModel;
 import com.mho.bakingapp.data.remote.models.Step;
 import com.mho.bakingapp.features.recipestepvideo.RecipeStepVideo;
@@ -19,6 +21,8 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
     //region Fields
 
     public final MutableLiveData<String> recipeStepDescription = new MutableLiveData<>();
+
+    private boolean isTwoPane;
 
     private Step step;
 
@@ -57,6 +61,19 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
         }
 
         step = arguments.getParcelable(EXTRA_STEP);
+    }
+
+    void initTwoPaneVariable(Context context){
+        isTwoPane = context.getResources().getBoolean(R.bool.two_pane_mode);
+    }
+
+    void validateRecipeStepPageOrientation(Context context){
+        int orientation = context.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && !isTwoPane) {
+            getNavigator().expandVideoView();
+            getNavigator().hideDescriptionCard();
+            getNavigator().setFullScreenMode();
+        }
     }
 
     void initRecipeStep(Context context) {

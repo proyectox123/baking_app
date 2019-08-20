@@ -54,7 +54,7 @@ public class RecipeStepPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return context.getString(R.string.title_recipe_step_page, stepList.get(position).getId());
+        return context.getString(R.string.title_recipe_step_page, stepList.get(position).getId() + 1);
     }
 
     //endregion
