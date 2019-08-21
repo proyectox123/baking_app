@@ -1,10 +1,14 @@
 package com.mho.bakingapp.features.recipedetail;
 
+import android.app.Application;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 
 import com.mho.bakingapp.bases.BaseViewModel;
 import com.mho.bakingapp.data.remote.models.Recipe;
 import com.mho.bakingapp.data.remote.models.Step;
+import com.mho.bakingapp.data.remote.requests.RecipeListRequest;
 
 import static com.mho.bakingapp.utils.Constants.EXTRA_RECIPE;
 
@@ -13,6 +17,14 @@ public class RecipeDetailViewModel extends BaseViewModel<RecipeDetailNavigator> 
     //region Fields
 
     private Recipe recipe;
+
+    //endregion
+
+    //region Constructors
+
+    public RecipeDetailViewModel(@NonNull Application application) {
+        super(application);
+    }
 
     //endregion
 

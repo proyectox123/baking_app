@@ -1,6 +1,8 @@
 package com.mho.bakingapp.features.main;
 
 import androidx.lifecycle.MutableLiveData;
+
+import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
@@ -10,6 +12,7 @@ import android.util.Log;
 import com.mho.bakingapp.bases.BaseViewModel;
 import com.mho.bakingapp.data.remote.models.Recipe;
 import com.mho.bakingapp.data.remote.requests.RecipeListRequest;
+import com.mho.bakingapp.features.recipestepvideo.RecipeStepVideo;
 import com.mho.bakingapp.utils.FetchingIdlingResource;
 
 import java.util.ArrayList;
@@ -37,7 +40,11 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
 
     //region Constructors
 
-    public MainViewModel(){
+    //region Constructors
+
+    public MainViewModel(@NonNull Application application) {
+        super(application);
+
         this.recipeListRequest = new RecipeListRequest();
     }
 

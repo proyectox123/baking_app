@@ -2,9 +2,7 @@ package com.mho.bakingapp.features.recipestepvideo;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
+import android.os.Bundle;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -23,6 +21,9 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.mho.bakingapp.R;
 
+import static com.mho.bakingapp.utils.Constants.EXTRA_PLAY_WHEN_READY;
+import static com.mho.bakingapp.utils.Constants.EXTRA_VIDEO_POSITION;
+
 public class RecipeStepVideo implements Player.EventListener{
 
     //region Constants
@@ -33,6 +34,10 @@ public class RecipeStepVideo implements Player.EventListener{
 
     //region Fields
 
+    private boolean isPlayWhenReady = true;
+    private long currentVideoPosition = 0;
+
+    private Context context;
     private SimpleExoPlayer player;
 
     private OnRecipeStepVideoListener onRecipeStepVideoListener;
@@ -41,7 +46,8 @@ public class RecipeStepVideo implements Player.EventListener{
 
     //region Constructors
 
-    public RecipeStepVideo(OnRecipeStepVideoListener onRecipeStepVideoListener){
+    public RecipeStepVideo(Context context, OnRecipeStepVideoListener onRecipeStepVideoListener){
+        this.context = context;
         this.onRecipeStepVideoListener = onRecipeStepVideoListener;
     }
 
@@ -53,20 +59,14 @@ public class RecipeStepVideo implements Player.EventListener{
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         switch (playbackState) {
             case Player.STATE_BUFFERING:
-                //spinnerVideoDetails.setVisibility(View.VISIBLE);
                 break;
             case Player.STATE_ENDED:
-                // Activate the force enable
                 break;
             case Player.STATE_IDLE:
-
                 break;
             case Player.STATE_READY:
-                //spinnerVideoDetails.setVisibility(View.GONE);
-
                 break;
             default:
-                // status = PlaybackStatus.IDLE;
                 break;
         }
     }
@@ -75,7 +75,21 @@ public class RecipeStepVideo implements Player.EventListener{
 
     //region Public Methods
 
-    public void initializePlayer(@NonNull Context context, Uri mediaUri, long currentVideoPosition, boolean isPlayWhenReady) {
+    public void validateRecipeStepPageInstanceState(Bundle savedInstanceState) {
+        if(savedInstanceState == null){
+            return;
+        }
+
+        currentVideoPosition = savedInstanceState.getLong(EXTRA_VIDEO_POSITION, 0);
+        isPlayWhenReady = savedInstanceState.getBoolean(EXTRA_PLAY_WHEN_READY, true);
+    }
+
+    public void saveInstanceState(Bundle outState) {
+        outState.putLong(EXTRA_VIDEO_POSITION, currentVideoPosition);
+        outState.putBoolean(EXTRA_PLAY_WHEN_READY, isPlayWhenReady);
+    }
+
+    public void initializePlayer(Uri mediaUri) {
         if (player != null) {
             return;
         }
@@ -97,53 +111,17 @@ public class RecipeStepVideo implements Player.EventListener{
         }
 
         player.setPlayWhenReady(isPlayWhenReady);
-
-        /*
-        if (player == null) {
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
-            onRecipeStepVideoListener.setPlayer(player);
-        }
-
-        buildMediaSource(context, mediaUri, currentVideoPosition);
-        */
-    }
-
-    public void setPlayWhenReady(long currentVideoPosition, boolean isPlayWhenReady) {
-        Log.d(TAG, "Superlog setPlayWhenReady currentVideoPosition " + currentVideoPosition);
-        Log.d(TAG, "Superlog setPlayWhenReady isPlayWhenReady " + isPlayWhenReady);
-        Log.d(TAG, "Superlog setPlayWhenReady player == null " + (player == null));
-        if(player == null){
-            return;
-        }
-
-        try {
-            player.seekTo(currentVideoPosition);
-            player.setPlayWhenReady(isPlayWhenReady);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
     public void releasePlayer() {
         if (player == null) {
-            onRecipeStepVideoListener.updateCurrentVideoPosition(C.TIME_UNSET);
-            onRecipeStepVideoListener.updateIsPlayWhenReady(false);
+            currentVideoPosition = 0;
+            isPlayWhenReady = false;
             return;
         }
 
-        onRecipeStepVideoListener.updateCurrentVideoPosition(player.getCurrentPosition());
-        onRecipeStepVideoListener.updateIsPlayWhenReady(player.getPlayWhenReady());
-
-        player.stop();
-        player.release();
-        player = null;
-    }
-
-    public void stopPlayer(){
-        if (player == null) {
-            return;
-        }
+        currentVideoPosition = player.getCurrentPosition();
+        isPlayWhenReady = player.getPlayWhenReady();
 
         player.stop();
         player.release();
@@ -154,12 +132,12 @@ public class RecipeStepVideo implements Player.EventListener{
 
     //region Private Methods
 
-    private void buildMediaSource(@NonNull Context context, Uri mediaUri, long currentVideoPosition) {
+    private void buildMediaSource(Uri mediaUri, long currentVideoPosition) {
         if(player == null){
             return;
         }
 
-        MediaSource videoSource = createMediaSource(context, mediaUri);
+        MediaSource videoSource = createMediaSource(mediaUri);
 
         if(currentVideoPosition != C.TIME_UNSET){
             player.seekTo(currentVideoPosition);
@@ -170,21 +148,21 @@ public class RecipeStepVideo implements Player.EventListener{
         player.addListener(this);
     }
 
-    private MediaSource createMediaSource(@NonNull Context context, Uri mediaUri){
+    private MediaSource createMediaSource(Uri mediaUri){
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
                 context,
-                getUserAgent(context),
-                getDefaultBandwidthMeter(context)
+                getUserAgent(),
+                getDefaultBandwidthMeter()
         );
 
         return new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(mediaUri);
     }
 
-    private String getUserAgent(Context context){
+    private String getUserAgent(){
         return Util.getUserAgent(context, context.getString(R.string.app_name));
     }
 
-    private DefaultBandwidthMeter getDefaultBandwidthMeter(Context context){
+    private DefaultBandwidthMeter getDefaultBandwidthMeter(){
         return new DefaultBandwidthMeter.Builder(context).build();
     }
 
@@ -194,8 +172,6 @@ public class RecipeStepVideo implements Player.EventListener{
 
     public interface OnRecipeStepVideoListener {
         void setPlayer(SimpleExoPlayer player);
-        void updateCurrentVideoPosition(long currentPosition);
-        void updateIsPlayWhenReady(boolean playWhenReady);
     }
 
     //endregon

@@ -1,5 +1,6 @@
 package com.mho.bakingapp.features.recipesteppage;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -14,7 +15,9 @@ import com.mho.bakingapp.bases.BaseViewModel;
 import com.mho.bakingapp.data.remote.models.Step;
 import com.mho.bakingapp.features.recipestepvideo.RecipeStepVideo;
 
+import static com.mho.bakingapp.utils.Constants.EXTRA_PLAY_WHEN_READY;
 import static com.mho.bakingapp.utils.Constants.EXTRA_STEP;
+import static com.mho.bakingapp.utils.Constants.EXTRA_VIDEO_POSITION;
 
 public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigator> implements
         RecipeStepVideo.OnRecipeStepVideoListener {
@@ -24,19 +27,17 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
     public final MutableLiveData<String> recipeStepDescription = new MutableLiveData<>();
 
     private boolean isTwoPane;
-
     private Step step;
-
     private RecipeStepVideo recipeStepVideo;
 
     //endregion
 
     //region Constructors
 
-    public RecipeStepPageViewModel(){
-        super();
+    public RecipeStepPageViewModel(@NonNull Application application) {
+        super(application);
 
-        this.recipeStepVideo = new RecipeStepVideo(this);
+        this.recipeStepVideo = new RecipeStepVideo(getApplication(), this);
     }
 
     //endregion
@@ -46,16 +47,6 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
     @Override
     public void setPlayer(SimpleExoPlayer player) {
         getNavigator().setPlayer(player);
-    }
-
-    @Override
-    public void updateCurrentVideoPosition(long currentPosition) {
-        getNavigator().updateCurrentVideoPosition(currentPosition);
-    }
-
-    @Override
-    public void updateIsPlayWhenReady(boolean playWhenReady) {
-        getNavigator().updateIsPlayWhenReady(playWhenReady);
     }
 
     //endregion
@@ -74,6 +65,14 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
         step = arguments.getParcelable(EXTRA_STEP);
     }
 
+    void validateRecipeStepPageInstanceState(Bundle savedInstanceState){
+        recipeStepVideo.validateRecipeStepPageInstanceState(savedInstanceState);
+    }
+
+    void saveInstanceState(Bundle outState){
+        recipeStepVideo.saveInstanceState(outState);
+    }
+
     void initTwoPaneVariable(Context context){
         isTwoPane = context.getResources().getBoolean(R.bool.two_pane_mode);
     }
@@ -87,30 +86,22 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
         }
     }
 
-    void initRecipeStep(@NonNull Context context, long currentVideoPosition, boolean isPlayWhenReady) {
+    void initPlayer(){
         recipeStepDescription.setValue(step.getDescription());
-        validateRecipeStepVideo(context, step, currentVideoPosition, isPlayWhenReady);
-    }
-
-    void setPlayWhenReady(long currentVideoPosition, boolean isPlayWhenReady){
-        recipeStepVideo.setPlayWhenReady(currentVideoPosition, isPlayWhenReady);
+        validateRecipeStepVideo(step);
     }
 
     void releasePlayer(){
         recipeStepVideo.releasePlayer();
     }
 
-    void stopPlayer(){
-        recipeStepVideo.stopPlayer();
-    }
-
-    private void validateRecipeStepVideo(Context context, Step step, long currentVideoPosition, boolean isPlayWhenReady){
+    private void validateRecipeStepVideo(Step step){
         if (step.getVideoURL() == null || step.getVideoURL().trim().isEmpty()) {
             getNavigator().hidePlayer();
             return;
         }
 
-        recipeStepVideo.initializePlayer(context, Uri.parse(step.getVideoURL()), currentVideoPosition, isPlayWhenReady);
+        recipeStepVideo.initializePlayer(Uri.parse(step.getVideoURL()));
     }
 
     //endregion

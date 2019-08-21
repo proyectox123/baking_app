@@ -8,6 +8,4 @@ public interface RecipeStepPageNavigator {
     void expandVideoView();
     void hideDescriptionCard();
     void setFullScreenMode();
-    void updateCurrentVideoPosition(long currentPosition);
-    void updateIsPlayWhenReady(boolean playWhenReady);
 }

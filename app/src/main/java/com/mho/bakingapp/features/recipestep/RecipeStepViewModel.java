@@ -1,6 +1,9 @@
 package com.mho.bakingapp.features.recipestep;
 
+import android.app.Application;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 
 import com.mho.bakingapp.bases.BaseViewModel;
 import com.mho.bakingapp.data.remote.models.Step;
@@ -16,6 +19,14 @@ public class RecipeStepViewModel extends BaseViewModel<RecipeStepNavigator> {
 
     private int stepId;
     private List<Step> stepList;
+
+    //endregion
+
+    //region Constructors
+
+    public RecipeStepViewModel(@NonNull Application application) {
+        super(application);
+    }
 
     //endregion
 
