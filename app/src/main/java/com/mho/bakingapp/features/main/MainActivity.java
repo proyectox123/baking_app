@@ -6,11 +6,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.test.espresso.IdlingResource;
 
 import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;
@@ -20,6 +22,7 @@ import com.mho.bakingapp.bases.BaseActivity;
 import com.mho.bakingapp.data.remote.models.Recipe;
 import com.mho.bakingapp.databinding.ActivityMainBinding;
 import com.mho.bakingapp.features.recipedetail.RecipeDetailActivity;
+import com.mho.bakingapp.utils.FetchingIdlingResource;
 import com.mho.bakingapp.widgets.AppWidgetService;
 
 import java.util.List;
@@ -37,6 +40,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     //endregion
 
     //region Fields
+
+    private FetchingIdlingResource idlingResource;
 
     private RecipeListAdapter recipeAdapter;
 
@@ -107,11 +112,24 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     public void updateRecipeList(@NonNull List<Recipe> recipeList) {
         binding.recipeListSwipeRefresh.setRefreshing(false);
         recipeAdapter.setList(recipeList);
+        if(idlingResource != null){
+            idlingResource.doneFetching();
+        }
     }
 
     @Override
     public void showLoadingRecipeListError(){
         binding.recipeListSwipeRefresh.setRefreshing(false);
+        if(idlingResource != null){
+            idlingResource.doneFetching();
+        }
+    }
+
+    @Override
+    public void beginFetching() {
+        if(idlingResource != null){
+            idlingResource.beginFetching();
+        }
     }
 
     @Override
@@ -122,6 +140,20 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         Intent intent = new Intent(this, RecipeDetailActivity.class);
         intent.putExtra(EXTRA_RECIPE, recipe);
         startActivity(intent);
+    }
+
+    //endregion
+
+    //region Public Methods
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (idlingResource == null) {
+            idlingResource = new FetchingIdlingResource();
+        }
+
+        return idlingResource;
     }
 
     //endregion

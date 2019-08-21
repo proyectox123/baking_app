@@ -32,7 +32,6 @@ public class RecipeListRequest {
 
         RecipeDao recipeDao = retrofit.create(RecipeDao.class);
         Call<List<Recipe>> call = recipeDao.getRecipeList();
-
         call.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {

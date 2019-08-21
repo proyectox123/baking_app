@@ -64,6 +64,7 @@
 
         <ProgressBar
             style="@style/Base.Widget.AppCompat.ProgressBar"
+            android:id="@+id/progressRecipeList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{safeUnbox(viewModel.isLoading) ? View.VISIBLE : View.GONE}"

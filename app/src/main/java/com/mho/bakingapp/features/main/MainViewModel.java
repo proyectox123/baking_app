@@ -10,6 +10,7 @@ import android.util.Log;
 import com.mho.bakingapp.bases.BaseViewModel;
 import com.mho.bakingapp.data.remote.models.Recipe;
 import com.mho.bakingapp.data.remote.requests.RecipeListRequest;
+import com.mho.bakingapp.utils.FetchingIdlingResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,23 +105,15 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
     }
 
     void retryInitRecipeList(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recipeListRequest.request();
-            }
-        }, 1000);
+        getNavigator().beginFetching();
+        recipeListRequest.request();
     }
 
     private void initRecipeList(){
         Log.d(TAG, "initRecipeList");
         isLoading.setValue(true);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recipeListRequest.request();
-            }
-        }, 1000);
+        getNavigator().beginFetching();
+        recipeListRequest.request();
     }
 
     //endregion
