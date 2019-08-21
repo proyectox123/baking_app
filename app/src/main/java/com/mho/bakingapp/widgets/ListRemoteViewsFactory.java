@@ -48,7 +48,8 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
     public RemoteViews getViewAt(int position) {
         RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.item_recipe_ingredient);
 
-        row.setTextViewText(R.id.itemIngredientDetail, recipe.getIngredients().get(position).getIngredient());
+        String ingredientLabel = "* " + recipe.getIngredients().get(position).getIngredient();
+        row.setTextViewText(R.id.itemIngredientDetail, ingredientLabel);
 
         return row;
     }
