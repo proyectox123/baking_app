@@ -137,7 +137,7 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
 
     //region Private Methods
 
-    static RecipeStepPageFragment newInstance(Bundle bundle){
+    public static RecipeStepPageFragment newInstance(Bundle bundle){
         RecipeStepPageFragment fragment = new RecipeStepPageFragment();
         fragment.setArguments(bundle);
         return fragment;
