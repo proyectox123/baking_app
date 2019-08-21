@@ -2,9 +2,9 @@
 
 This is an Android application that allows Udacity's resident baker-in-chief, Miriam, to share her recipes with the world.
 
-![Kiku](captures/capture1.png) ![Kiku](captures/capture2.png) ![Kiku](captures/capture3.png)
+![Kiku](screenshots/capture1.png) ![Kiku](screenshots/capture2.png) ![Kiku](screenshots/capture3.png)
 
-![Kiku](captures/capture4.png)
+![Kiku](screenshots/capture4.png)
 
 ### User Experience
 
