@@ -18,6 +18,11 @@ import com.mho.bakingapp.R;
 import com.mho.bakingapp.bases.BaseFragment;
 import com.mho.bakingapp.databinding.FragmentRecipeStepPageBinding;
 
+import java.util.Objects;
+
+import static com.mho.bakingapp.utils.Constants.EXTRA_PLAY_WHEN_READY;
+import static com.mho.bakingapp.utils.Constants.EXTRA_VIDEO_POSITION;
+
 public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageBinding, RecipeStepPageViewModel>
         implements RecipeStepPageNavigator {
 
@@ -28,6 +33,10 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
     //endregion
 
     //region Fields
+
+    private boolean isPlayWhenReady = true;
+
+    private long currentVideoPosition = 0;
 
     private RecipeStepPageViewModel recipeStepPageViewModel;
 
@@ -48,6 +57,17 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
 
         recipeStepPageViewModel.validateRecipeStepPageArguments(getArguments());
         recipeStepPageViewModel.initTwoPaneVariable(getContext());
+
+        if(savedInstanceState == null){
+            currentVideoPosition = 0;
+            isPlayWhenReady = true;
+        }else{
+            currentVideoPosition = savedInstanceState.getLong(EXTRA_VIDEO_POSITION, 0);
+            isPlayWhenReady = savedInstanceState.getBoolean(EXTRA_PLAY_WHEN_READY, true);
+        }
+
+        Log.d(TAG, "Superlog onCreate currentVideoPosition " + currentVideoPosition);
+        Log.d(TAG, "Superlog onCreate isPlayWhenReady " + isPlayWhenReady);
     }
 
     @Override
@@ -61,7 +81,7 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
     @Override
     public void onResume() {
         super.onResume();
-        recipeStepPageViewModel.initRecipeStep(getContext());
+        recipeStepPageViewModel.initRecipeStep(Objects.requireNonNull(getContext()), currentVideoPosition, isPlayWhenReady);
     }
 
     @Override
@@ -69,6 +89,13 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
         super.onPause();
 
         recipeStepPageViewModel.releasePlayer();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(EXTRA_VIDEO_POSITION, currentVideoPosition);
+        outState.putBoolean(EXTRA_PLAY_WHEN_READY, isPlayWhenReady);
     }
 
     @Override
@@ -131,6 +158,16 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
 
             window.getDecorView().setSystemUiVisibility(visibility);
         }
+    }
+
+    @Override
+    public void updateCurrentVideoPosition(long currentPosition) {
+        currentVideoPosition = currentPosition;
+    }
+
+    @Override
+    public void updateIsPlayWhenReady(boolean playWhenReady) {
+        isPlayWhenReady = playWhenReady;
     }
 
     //endregion

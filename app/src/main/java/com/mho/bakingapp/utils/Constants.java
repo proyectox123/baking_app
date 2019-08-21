@@ -10,6 +10,8 @@ public class Constants {
     public final static String EXTRA_STEP = BuildConfig.APPLICATION_ID + ".EXTRA_STEP";
     public final static String EXTRA_STEP_ID = BuildConfig.APPLICATION_ID + ".EXTRA_STEP_ID";
     public final static String EXTRA_STEP_LIST = BuildConfig.APPLICATION_ID + ".EXTRA_STEP_LIST";
+    public final static String EXTRA_VIDEO_POSITION = BuildConfig.APPLICATION_ID + ".EXTRA_VIDEO_POSITION";
+    public final static String EXTRA_PLAY_WHEN_READY = BuildConfig.APPLICATION_ID + ".EXTRA_PLAY_WHEN_READY";
 
     public final static int RECIPE_GRID_COLUMNS = 3;
 

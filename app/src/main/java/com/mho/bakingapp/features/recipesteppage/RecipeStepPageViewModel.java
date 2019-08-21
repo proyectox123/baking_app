@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -47,6 +48,16 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
         getNavigator().setPlayer(player);
     }
 
+    @Override
+    public void updateCurrentVideoPosition(long currentPosition) {
+        getNavigator().updateCurrentVideoPosition(currentPosition);
+    }
+
+    @Override
+    public void updateIsPlayWhenReady(boolean playWhenReady) {
+        getNavigator().updateIsPlayWhenReady(playWhenReady);
+    }
+
     //endregion
 
     //region Private Methods
@@ -76,23 +87,30 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
         }
     }
 
-    void initRecipeStep(Context context) {
+    void initRecipeStep(@NonNull Context context, long currentVideoPosition, boolean isPlayWhenReady) {
         recipeStepDescription.setValue(step.getDescription());
-        validateRecipeStepVideo(context, step);
+        validateRecipeStepVideo(context, step, currentVideoPosition, isPlayWhenReady);
+    }
+
+    void setPlayWhenReady(long currentVideoPosition, boolean isPlayWhenReady){
+        recipeStepVideo.setPlayWhenReady(currentVideoPosition, isPlayWhenReady);
     }
 
     void releasePlayer(){
         recipeStepVideo.releasePlayer();
     }
 
-    private void validateRecipeStepVideo(Context context, Step step){
+    void stopPlayer(){
+        recipeStepVideo.stopPlayer();
+    }
+
+    private void validateRecipeStepVideo(Context context, Step step, long currentVideoPosition, boolean isPlayWhenReady){
         if (step.getVideoURL() == null || step.getVideoURL().trim().isEmpty()) {
             getNavigator().hidePlayer();
             return;
         }
 
-        recipeStepVideo.initializePlayer(context);
-        recipeStepVideo.buildMediaSource(context, Uri.parse(step.getVideoURL()));
+        recipeStepVideo.initializePlayer(context, Uri.parse(step.getVideoURL()), currentVideoPosition, isPlayWhenReady);
     }
 
     //endregion
