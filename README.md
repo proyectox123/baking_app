@@ -28,6 +28,10 @@ This project uses AndroidX in order to keep updated all the current libraries.
 
 This project uses LiveData in order to observe changes in database and update UI.
 
+#### Image Library - Picasso
+
+This project uses Picasso in order to load recipe & step images.
+
 #### Exoplayer
 
 This project uses Exoplayer in order to display recipe step videos.

@@ -2,11 +2,13 @@ package com.mho.bakingapp.adapters.recipe;
 
 import androidx.annotation.NonNull;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.bases.BaseViewHolder;
 import com.mho.bakingapp.data.remote.models.Recipe;
+import com.squareup.picasso.Picasso;
 
 public class RecipeViewHolder extends BaseViewHolder<Recipe> {
 
@@ -18,6 +20,7 @@ public class RecipeViewHolder extends BaseViewHolder<Recipe> {
 
     //region Fields
 
+    private ImageView itemRecipeIcon;
     private TextView itemRecipeTitle;
     private TextView itemRecipeServings;
     private TextView itemRecipeIngredients;
@@ -32,6 +35,7 @@ public class RecipeViewHolder extends BaseViewHolder<Recipe> {
                      OnRecipeViewHolderListener onRecipeViewHolderListener) {
         super(itemView);
 
+        this.itemRecipeIcon = itemView.findViewById(R.id.itemRecipeIcon);
         this.itemRecipeTitle = itemView.findViewById(R.id.itemRecipeTitle);
         this.itemRecipeServings = itemView.findViewById(R.id.itemRecipeServings);
         this.itemRecipeIngredients = itemView.findViewById(R.id.itemRecipeIngredients);
@@ -45,19 +49,36 @@ public class RecipeViewHolder extends BaseViewHolder<Recipe> {
 
     @Override
     public void bind(final Recipe item) {
-        String recipeServingsLabel = context.getString(R.string.item_recipe_servings, item.getServings());
-        String recipeIngredientsLabel = context.getString(R.string.item_recipe_ingredients, item.getIngredientsCount());
+        initRecipeName(item.getName());
+        initRecipeServingsNumber(context.getString(R.string.item_recipe_servings, item.getServings()));
+        initRecipeIngredientsNumber(context.getString(R.string.item_recipe_ingredients, item.getIngredientsCount()));
+        initRecipeIcon(item.getImage());
 
-        itemRecipeTitle.setText(item.getName());
-        itemRecipeServings.setText(recipeServingsLabel);
-        itemRecipeIngredients.setText(recipeIngredientsLabel);
+        itemView.setOnClickListener(v -> onRecipeViewHolderListener.selectRecipe(item));
+    }
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onRecipeViewHolderListener.selectRecipe(item);
-            }
-        });
+    //endregion
+
+    //region Private Methods
+
+    private void initRecipeName(String recipeName){
+        itemRecipeTitle.setText(recipeName);
+    }
+
+    private void initRecipeServingsNumber(String recipeServings){
+        itemRecipeServings.setText(recipeServings);
+    }
+
+    private void initRecipeIngredientsNumber(String recipeIngredients){
+        itemRecipeIngredients.setText(recipeIngredients);
+    }
+
+    private void initRecipeIcon(String image){
+        Picasso.get()
+                .load(image)
+                .placeholder(R.drawable.ic_tray)
+                .error(R.drawable.ic_tray)
+                .into(itemRecipeIcon);
     }
 
     //endregion

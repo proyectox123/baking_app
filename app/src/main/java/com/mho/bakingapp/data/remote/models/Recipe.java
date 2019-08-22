@@ -4,6 +4,8 @@ package com.mho.bakingapp.data.remote.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class Recipe implements Parcelable {
@@ -56,6 +58,10 @@ public class Recipe implements Parcelable {
     }
 
     public String getImage() {
+        if(image == null || image.trim().length() == 0){
+            return null;
+        }
+
         return image;
     }
 
@@ -106,6 +112,7 @@ public class Recipe implements Parcelable {
         }
     };
 
+    @NonNull
     @Override
     public String toString() {
         return "Recipe{" +

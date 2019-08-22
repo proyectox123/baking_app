@@ -54,6 +54,10 @@ public class Step implements Parcelable {
     }
 
     public String getThumbnailURL() {
+        if(thumbnailURL == null || thumbnailURL.trim().length() == 0){
+            return null;
+        }
+
         return thumbnailURL;
     }
 

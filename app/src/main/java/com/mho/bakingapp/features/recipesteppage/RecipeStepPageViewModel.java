@@ -80,6 +80,11 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
     void validateRecipeStepPageOrientation(Context context){
         int orientation = context.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE && !isTwoPane) {
+            String videoURL = step.getVideoURL();
+            if (videoURL == null || videoURL.trim().isEmpty()) {
+                return;
+            }
+
             getNavigator().expandVideoView();
             getNavigator().hideDescriptionCard();
             getNavigator().setFullScreenMode();
@@ -95,13 +100,15 @@ public class RecipeStepPageViewModel extends BaseViewModel<RecipeStepPageNavigat
         recipeStepVideo.releasePlayer();
     }
 
-    private void validateRecipeStepVideo(Step step){
-        if (step.getVideoURL() == null || step.getVideoURL().trim().isEmpty()) {
+    private void validateRecipeStepVideo(@NonNull Step step){
+        String videoURL = step.getVideoURL();
+        if (videoURL == null || videoURL.trim().isEmpty()) {
             getNavigator().hidePlayer();
+            getNavigator().showThumbnailRecipe(step.getThumbnailURL());
             return;
         }
 
-        recipeStepVideo.initializePlayer(Uri.parse(step.getVideoURL()));
+        recipeStepVideo.initializePlayer(Uri.parse(videoURL));
     }
 
     //endregion

@@ -17,6 +17,7 @@ import com.mho.bakingapp.BR;
 import com.mho.bakingapp.R;
 import com.mho.bakingapp.bases.BaseFragment;
 import com.mho.bakingapp.databinding.FragmentRecipeStepPageBinding;
+import com.squareup.picasso.Picasso;
 
 public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageBinding, RecipeStepPageViewModel>
         implements RecipeStepPageNavigator {
@@ -106,8 +107,21 @@ public class RecipeStepPageFragment extends BaseFragment<FragmentRecipeStepPageB
 
     @Override
     public void setPlayer(SimpleExoPlayer player) {
+        binding.imageRecipeStepThumbnail.setVisibility(View.GONE);
         binding.videoRecipeStep.setVisibility(View.VISIBLE);
         binding.videoRecipeStep.setPlayer(player);
+    }
+
+    @Override
+    public void showThumbnailRecipe(String thumbnailURL) {
+        binding.videoRecipeStep.setVisibility(View.GONE);
+        binding.imageRecipeStepThumbnail.setVisibility(View.VISIBLE);
+
+        Picasso.get()
+                .load(thumbnailURL)
+                .placeholder(R.drawable.ic_chef)
+                .error(R.drawable.ic_chef)
+                .into(binding.imageRecipeStepThumbnail);
     }
 
     @Override
